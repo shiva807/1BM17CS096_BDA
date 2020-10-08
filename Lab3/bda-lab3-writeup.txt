@@ -1,0 +1,82 @@
+BDA LAB 3 - Program 1
+
+> use StudentDbase
+
+> db.createCollection("students")
+
+> db.students.insert({_id:1, rollno:"012", age:18, contact:"987387379", email:"ram@gmail.com"});
+
+> db.students.insert({_id:2, name:"sita", rollno:"010", age:18, contact:"963537379", email:"sita@gmail.com"});
+
+> db.students.insert({_id:3, name:"ganesh", rollno:"011", age:17, contact:"963537772", email:"ganesh@yahoo.com"});
+
+> db.students.insert({_id:4, name:"laxman", rollno:"013", age:16, contact:"8376227889", email:"laxman22@hotmail.com"});
+
+> db.students.update({_id:1}, {$set:{name:"ram"}});
+
+> db.students.find().pretty();
+
+> db.students.update({rollno:"010"}, {$set:{email:"sita98@gmail.com"}});
+
+> db.students.update({rollno:"011"}, {$set:{name:"ganesh S."}});
+
+> db.students.find({rollno:"010"});
+
+> db.students.find({rollno:"011"}).pretty();
+
+$ sudo mongoexport --db StudentDbase -c students --out bda-lab3-students.csv
+
+$ cat bda-lab3-students.csv 
+
+> use StudentDbase
+
+> show collections
+
+> db.students.drop();
+
+$ sudo mongoimport --db StudentDbase -c students --file bda-lab3-students.csv
+
+----------------------------------------------------------------------------------------------
+
+BDA LAB 3 - Program 2
+
+> use Customers;
+
+> db.createCollection("customer");
+
+> db.customer.insert({_id:1, cust_id:"12", account_baln:5000.00, account_type:"savings"});
+
+> db.customer.insert({_id:2, cust_id:"22", account_baln:3000.00, account_type:"current"});
+
+> db.customer.insert({_id:3, cust_id:"32", account_baln:1200.00, account_type:"current"});
+
+> db.customer.insert({_id:4, cust_id:"32", account_baln:4200.00, account_type:"ppf"});
+
+> db.customer.insert({_id:5, cust_id:"22", account_baln:1000.00, account_type:"savings"});
+
+> db.customer.insert({_id:6, cust_id:"12", account_baln:10000.00, account_type:"current"});
+
+> db.customer.find().pretty();
+
+> db.customer.aggregate({$match : {account_type:"current"}}, {$group : {_id:"$cust_id", totalBaln: {$sum :"$account_baln"}}}, {$match : {totalBaln : {$gt : 1200}}});
+
+> db.customer.aggregate({$group : {_id:"$cust_id", maxBaln: {$max : "$account_baln"}}});
+
+> db.customer.aggregate({$group : {_id:"$cust_id", minBaln: {$min : "$account_baln"}}});
+
+$ sudo mongoexport --db Customers -c customer --out bda-lab3-customer.csv
+
+> use Customers
+
+> db.customer.drop();
+
+$ sudo mongoimport --db Customers -c customer_new --file bda-lab3-customer.csv
+
+
+
+
+
+
+
+
+
