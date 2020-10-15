@@ -1,0 +1,47 @@
+> use CountryDB
+switched to db CountryDB
+> db.createCollection("Country")
+{ "ok" : 1 }
+> 
+> db.Country.insert({_id:1,Cities:["Delhi","Banglore"]})
+WriteResult({ "nInserted" : 1 })
+> db.Country.insert({_id:2,Cities:["Chennai","Mumbai","Ranchi"]})
+WriteResult({ "nInserted" : 1 })
+> db.Country.insert({_id:3,Cities:["Pune","Rajkot","Hyderabad"]})
+WriteResult({ "nInserted" : 1 })
+> 
+> db.Country.find()
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore" ] }
+{ "_id" : 2, "Cities" : [ "Chennai", "Mumbai", "Ranchi" ] }
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot", "Hyderabad" ] }
+> db.Country.find().limit(1)
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore" ] }
+> db.Country.find().skip(2).limit(2)
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot", "Hyderabad" ] }
+> db.Country.update({_id:1},{$push:{population:{Delhi:30,Banglore:45}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Country.find()
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore" ], "population" : [ { "Delhi" : 30, "Banglore" : 45 } ] }
+{ "_id" : 2, "Cities" : [ "Chennai", "Mumbai", "Ranchi" ] }
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot", "Hyderabad" ] }
+> db.Country.update({_id:3},{$pop:{Cities:1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Country.find()
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore" ], "population" : [ { "Delhi" : 30, "Banglore" : 45 } ] }
+{ "_id" : 2, "Cities" : [ "Chennai", "Mumbai", "Ranchi" ] }
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot" ] }
+> db.Country.update({Cities:"Chennai"},{$pull:{Cities:'Chennai'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Country.find()
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore" ], "population" : [ { "Delhi" : 30, "Banglore" : 45 } ] }
+{ "_id" : 2, "Cities" : [ "Mumbai", "Ranchi" ] }
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot" ] }
+> db.Country.update({_id:1},{$set:{'Cities.2':'Srinagar'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Country.update({_id:2},{$addToSet:{Cities:"Mysore"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Country.find()
+{ "_id" : 1, "Cities" : [ "Delhi", "Banglore", "Srinagar" ], "population" : [ { "Delhi" : 30, "Banglore" : 45 } ] }
+{ "_id" : 2, "Cities" : [ "Mumbai", "Ranchi", "Mysore" ] }
+{ "_id" : 3, "Cities" : [ "Pune", "Rajkot" ] }
+

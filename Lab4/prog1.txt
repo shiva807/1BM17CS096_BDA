@@ -1,0 +1,94 @@
+> use books
+switched to db books
+> db.createCollection("books")
+{ "ok" : 1 }
+> db.books.save({_id:1,Category:"Machine Learning",BookName:"Machine Learning for Hackers",Author:"Drew Conway",qty:25,price:400,rol:30,pages:350})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 1 })
+> db.books.save({_id:2,Category:"Business Intelligence",BookName:"Fundamentals of Business Analytics",Author:"Seema Acharya",qty:55,price:500,rol:30,pages:250})
+
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 2 })
+> db.books.save({_id:3,Category:"Analytics",BookName:"Competing on Analytics",Author:"Thomas",qty:8,price:150,rol:20,pages:150})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 3 })
+>  db.books.save({_id:4,Category:"Visualisation",BookName:"Visualising Data",Author:"Ben Fry",qty:12,price:325,rol:6,pages:450})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 4 })
+> db.books.save({_id:5,Category:"Web Mining",BookName:"Learning R",Author:"Richard",qty:6,price:850,rol:10,pages:120})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 5 })
+> db.books.find().pretty()
+{
+	"_id" : 1,
+	"Category" : "Machine Learning",
+	"BookName" : "Machine Learning for Hackers",
+	"Author" : "Drew Conway",
+	"qty" : 25,
+	"price" : 400,
+	"rol" : 30,
+	"pages" : 350
+}
+{
+	"_id" : 2,
+	"Category" : "Business Intelligence",
+	"BookName" : "Fundamentals of Business Analytics",
+	"Author" : "Seema Acharya",
+	"qty" : 55,
+	"price" : 500,
+	"rol" : 30,
+	"pages" : 250
+}
+{
+	"_id" : 3,
+	"Category" : "Analytics",
+	"BookName" : "Competing on Analytics",
+	"Author" : "Thomas",
+	"qty" : 8,
+	"price" : 150,
+	"rol" : 20,
+	"pages" : 150
+}
+{
+	"_id" : 4,
+	"Category" : "Visualisation",
+	"BookName" : "Visualising Data",
+	"Author" : "Ben Fry",
+	"qty" : 12,
+	"price" : 325,
+	"rol" : 6,
+	"pages" : 450
+}
+{
+	"_id" : 5,
+	"Category" : "Web Mining",
+	"BookName" : "Learning R",
+	"Author" : "Richard",
+	"qty" : 6,
+	"price" : 850,
+	"rol" : 10,
+	"pages" : 120
+}
+> var map = function(){
+... ...     var category;
+... ...     if(this.pages>=300)
+... ...         category = "Big books"
+... ...     else
+... ...         category = "Small Books"
+... ...     emit(category, {
+... ...         Bookname : this.Bookname});
+... ... }
+> var reduce = function(key, values){
+... ...    return values.length    
+... ... };
+> db.books.mapReduce(map, reduce, {out: "Bookcategory"})
+{
+	"result" : "Bookcategory",
+	"timeMillis" : 727,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 2
+	},
+	"ok" : 1
+}
+> db.Bookcategory.find().pretty()
+{ "_id" : "Big books", "value" : 2 }
+{ "_id" : "Small Books", "value" : 3 }
+

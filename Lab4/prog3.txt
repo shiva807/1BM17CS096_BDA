@@ -1,0 +1,20 @@
+> use datasetDB
+switched to db datasetDB
+
+> db.createCollection("bank")
+{ "ok" : 1 }
+
+shivangi@shivangi-Inspiron-5559:~$ sudo mongoimport --db datasetDB --collection bank --type csv --headerline --file bank-data.csv
+2020-10-15T16:16:08.996+0530	connected to: localhost
+2020-10-15T16:16:09.131+0530	imported 600 documents
+
+> use datasetDB
+switched to db datasetDB
+
+> db.bank.aggregate([     { $group : { _id: null, sum: {$sum:"$children"} } } ])
+{ "_id" : null, "sum" : 607 }
+
+ 
+> db.bank.aggregate([     { $group : { _id: "Avg of Age", avg: {$avg:"$age"} } } ])
+{ "_id" : "Avg of Age", "avg" : 42.395 }
+
