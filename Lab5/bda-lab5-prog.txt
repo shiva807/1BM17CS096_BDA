@@ -1,0 +1,33 @@
+~/Downloads/apache-cassandra-3.11.8/bin$ ./cassandra -f
+~/Downloads/apache-cassandra-3.11.8/bin$ ./nodetool status
+~/Downloads/apache-cassandra-3.11.8/bin$ ./cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.8 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+
+cqlsh> create keyspace Students with replication = { 'class':'SimpleStrategy', 'replication_factor':1 };
+
+cqlsh> create table Students.Student_info(Student_id int PRIMARY KEY, StudName text, DateofJoining timestamp, Semester int, Dept_name text);
+
+cqlsh> use Students;
+
+cqlsh:students> begin batch insert into Student_Info(Student_id, StudName, DateofJoining, Semester, Dept_name) values(120, 'Michael Kahnwad', '2020-03-24', 1, 'CSE'); insert into Student_Info(Student_id, StudName, DateofJoining, Semester, Dept_name) values(121, 'Shivangi Balodia', '2020-03-25', 1, 'CSE'); apply batch;
+
+cqlsh:students> select * from Student_info;
+
+student_id | dateofjoining                   | dept_name | semester | studname
+------------+---------------------------------+-----------+----------+------------------
+        120 | 2020-03-23 18:30:00.000000+0000 |       CSE |        1 |  Michael Kahnwad
+        121 | 2020-03-24 18:30:00.000000+0000 |       CSE |        1 | Shivangi Balodia
+
+(2 rows)
+cqlsh:students> update Student_Info set StudName='Rahul Kumar' where Student_id=120;
+cqlsh:students> select * from Student_info;
+
+ student_id | dateofjoining                   | dept_name | semester | studname
+------------+---------------------------------+-----------+----------+------------------
+        120 | 2020-03-23 18:30:00.000000+0000 |       CSE |        1 |      Rahul Kumar
+        121 | 2020-03-24 18:30:00.000000+0000 |       CSE |        1 | Shivangi Balodia
+
+
+
