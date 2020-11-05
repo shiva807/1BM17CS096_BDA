@@ -1,0 +1,71 @@
+------Library-----
+
+~/Downloads/apache-cassandra-3.11.8/bin$ ./cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.8 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+
+cqlsh> create keyspace Library with replication = { 'class':'SimpleStrategy', 'replication_factor':1 };
+
+cqlsh> use Library;
+
+cqlsh:library> create columnfamily Library_info (stud_id int, counter_value counter, stud_name varchar, book_name varchar, book_id int, DOI varchar, PRIMARY KEY(stud_id, stud_name, book_name, book_id, DOI));
+
+cqlsh:library> update Library_info set counter_value = counter_value + 1 where stud_id = 110 AND stud_name = 'Ram' AND book_name = 'BDA' AND book_id = 1000 AND DOI = '2017-10-15'; 
+
+cqlsh:library> update Library_info set counter_value = counter_value + 1 where stud_id = 110 AND stud_name = 'Ram' AND book_name = 'BDA' AND book_id = 1000 AND DOI = '2017-10-15'; 
+
+cqlsh:library> update Library_info set counter_value = counter_value + 1 where stud_id = 111 AND stud_name = 'Sita' AND book_name = 'DSA' AND book_id = 1002 AND DOI = '2017-08-20'; 
+
+cqlsh:library> select * from Library_info;
+
+ stud_id | stud_name | book_name | book_id | doi        | counter_value
+---------+-----------+-----------+---------+------------+---------------
+     110 |       Ram |       BDA |    1000 | 2017-10-15 |             2
+     111 |      Sita |       DSA |    1002 | 2017-08-20 |             1
+
+(2 rows)
+cqlsh:library> select * from Library_info where stud_id=110;
+
+ stud_id | stud_name | book_name | book_id | doi        | counter_value
+---------+-----------+-----------+---------+------------+---------------
+     110 |       Ram |       BDA |    1000 | 2017-10-15 |             2
+
+(1 rows)
+cqlsh:library> copy Library_info(stud_id, counter_value, stud_name, book_name, book_id, DOI) to 'library_info.csv';
+
+Using 3 child processes
+
+Starting copy of library.library_info with columns [stud_id, counter_value, stud_name, book_name, book_id, doi].
+Processed: 2 rows; Rate:       4 rows/s; Avg. rate:       4 rows/s
+2 rows exported to 1 files in 0.532 seconds.
+
+cqlsh:library> truncate Library_info;
+
+cqlsh:library> select * from Library_info;
+
+ stud_id | stud_name | book_name | book_id | doi | counter_value
+---------+-----------+-----------+---------+-----+---------------
+
+(0 rows)
+cqlsh:library> copy Library_info(stud_id, counter_value, stud_name, book_name, book_id, DOI) from 'library_info.csv';
+
+Using 3 child processes
+
+Starting copy of library.library_info with columns [stud_id, counter_value, stud_name, book_name, book_id, doi].
+Processed: 2 rows; Rate:       3 rows/s; Avg. rate:       5 rows/s
+2 rows imported from 1 files in 0.424 seconds (0 skipped).
+
+cqlsh:library> select * from Library_info;
+
+ stud_id | stud_name | book_name | book_id | doi        | counter_value
+---------+-----------+-----------+---------+------------+---------------
+     110 |       Ram |       BDA |    1000 | 2017-10-15 |             2
+     111 |      Sita |       DSA |    1002 | 2017-08-20 |             1
+
+(2 rows)
+
+
+
+
+
